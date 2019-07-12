@@ -21,7 +21,7 @@ sentry_sdk.init(
 EVENT_TYPES = (
     # "customer.created",
     "customer.source.created",
-    # "customer.source.updated",
+    "customer.source.updated",
     "customer.subscription.created",
     "customer.subscription.deleted",
     "customer.subscription.trial_will_end",
