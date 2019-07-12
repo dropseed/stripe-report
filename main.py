@@ -25,7 +25,7 @@ EVENT_TYPES = (
     "customer.subscription.created",
     "customer.subscription.deleted",
     "customer.subscription.trial_will_end",
-    "customer.subscription.updated",
+    # "customer.subscription.updated",
     "invoice.payment_failed",
     "invoice.payment_succeeded",
 )
