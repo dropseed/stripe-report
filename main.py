@@ -64,9 +64,8 @@ class StripeReporter:
             if amount:
                 amount = amount / 100
                 amount = f"${amount:.2f}"
-            customer_name = obj.get("customer_name", "(no name)")
             customer_email = obj.get("customer_email", "(no email)")
-            s = f"{event['type']}: {customer_email} {customer_name} {amount} ({created} - https://dashboard.stripe.com/events/{event['id']})"
+            s = f"{event['type']}: {customer_email} {amount} ({created} - https://dashboard.stripe.com/events/{event['id']})"
             output.append(s)
 
         return output
