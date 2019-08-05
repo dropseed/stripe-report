@@ -64,8 +64,15 @@ class StripeReporter:
             if amount:
                 amount = amount / 100
                 amount = f"${amount:.2f}"
-            customer_email = obj.get("customer_email", "(no email)")
-            s = f"{event['type']}: {customer_email} {amount} ({created} - https://dashboard.stripe.com/events/{event['id']})"
+            customer_email = obj.get("customer_email", "")
+
+            icon = ""
+            if event["type"] == "customer.subscription.created":
+                icon = "🚀"
+            elif event["type"] == "invoice.payment_succeeded":
+                icon = "💵"
+
+            s = f"{icon} <a href='https://dashboard.stripe.com/events/{event['id']}'>{event['type']}</a>: {customer_email} {amount}"
             output.append(s)
 
         return output
