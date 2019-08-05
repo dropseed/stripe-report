@@ -81,8 +81,9 @@ class StripeReporter:
 def email_results(results):
     html =  "<h2>Dropseed Stripe report for the last 24 hrs</h2>"
     for name, lines in results.items():
-        html += f"<h3>{name}</h3>"
-        html += "<ul>" + "".join([f"<li>{x}</li>" for x in lines]) + "</ul>"
+        if lines:
+            html += f"<h3>{name}</h3>"
+            html += "<ul>" + "".join([f"<li>{x}</li>" for x in lines]) + "</ul>"
 
     message = {
         "html": html,
