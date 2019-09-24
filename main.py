@@ -44,7 +44,7 @@ class StripeReporter:
         self.results = {}
 
         for name, key in self.account_keys.items():
-            self.results[name] = self.events_for_key(key)
+            self.results[name] = self.events_for_key(key) + self.invoices_for_key(key)
 
     def events_for_key(self, stripe_key):
         ago = datetime.datetime.now() - datetime.timedelta(days=1)
@@ -74,6 +74,21 @@ class StripeReporter:
 
             s = f"{icon} <a href='https://dashboard.stripe.com/events/{event['id']}'>{event['type']}</a>: {customer_email} {amount}"
             output.append(s)
+
+        return output
+
+    def invoices_for_key(self, stripe_key):
+        stripe.api_key = stripe_key
+        invoices = list(stripe.Invoice.list(limit=100, status="open"))
+
+        output = []
+
+        for invoice in invoices:
+            amount = invoice["total"] / 100
+            amount = f"${amount:.2f}"
+            s = f"🧾 <a href='{invoice['hosted_invoice_url']}'>Open invoice</a>: {invoice['customer_email']} {amount} {invoice['collection_method']}"
+            output.append(s)
+            stripe.Invoice.mark_uncollectible(invoice['id'])
 
         return output
 
