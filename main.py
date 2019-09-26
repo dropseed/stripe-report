@@ -88,7 +88,6 @@ class StripeReporter:
             amount = f"${amount:.2f}"
             s = f"🧾 <a href='{invoice['hosted_invoice_url']}'>Open invoice</a>: {invoice['customer_email']} {amount} {invoice['collection_method']}"
             output.append(s)
-            stripe.Invoice.mark_uncollectible(invoice['id'])
 
         return output
 
