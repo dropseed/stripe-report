@@ -1,2 +1,0 @@
-#!/bin/sh -e
-gcloud functions deploy stripe-report --runtime python37 --trigger-http --project dropseed

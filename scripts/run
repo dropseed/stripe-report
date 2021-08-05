@@ -1,2 +1,2 @@
 #!/bin/sh -e
-pipenv run python main.py "$(cat input.json)"
+pipenv run python main.py

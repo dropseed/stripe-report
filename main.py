@@ -2,14 +2,9 @@ import sys
 import json
 import os
 import datetime
-import socket
-import ssl
-import urllib.parse
 
 import stripe
-import requests
 import sentry_sdk
-from sentry_sdk.integrations.serverless import serverless_function
 
 
 sentry_sdk.init(
@@ -17,7 +12,7 @@ sentry_sdk.init(
 )
 
 
-# max 20
+# Max 20
 EVENT_TYPES = (
     # "customer.created",
     "customer.source.created",
@@ -35,10 +30,6 @@ class StripeReporter:
     def __init__(self):
         self.account_keys = {}
         self.results = {}
-
-    def load_data(self, data):
-        print(f"Loading data")
-        self.account_keys = data
 
     def run(self):
         self.results = {}
@@ -99,38 +90,41 @@ def email_results(results):
             html += f"<h3>{name}</h3>"
             html += "<ul>" + "".join([f"<li>{x}</li>" for x in lines]) + "</ul>"
 
-    message = {
-        "html": html,
-        "to": [{"email": x} for x in os.environ["EMAILS"].split(",")],
-        "subject": "Dropseed Stripe Report",
-        "from_email": "reports@dropseed.io",
-        "from_name": "Dropseed Reports",
-    }
-
-    print(json.dumps(message, indent=2))
-
-    response = requests.post("https://mandrillapp.com/api/1.0/messages/send.json", json={"key": os.environ["MANDRILL_API_KEY"], "message": message})
-    response.raise_for_status()
+    send_email("Dropseed Stripe Report", html, os.environ["EMAIL"], "Dropseed Reports <reports@dropseed.io>")
 
 
-@serverless_function
-def gcloud_handler(request):
-    body = request.get_data(as_text=True)
-    data = json.loads(body)
-    pd = StripeReporter()
-    pd.load_data(data)
-    pd.run()
+def send_email(subject, html, to_email, from_email):
+    import smtplib
+    from email.mime.text import MIMEText
+    from email.mime.multipart import MIMEMultipart
 
-    if any(pd.results.values()):
-        email_results(pd.results)
+    msg = MIMEMultipart()
+    msg['From'] = from_email
+    msg['To'] = to_email
+    msg['Subject'] = subject
 
-    return json.dumps(pd.results)
+    msg.attach(MIMEText(html, 'html'))
+
+    mailServer = smtplib.SMTP(os.environ["SMTP_HOST"], os.environ.get("SMTP_PORT", 587))
+    mailServer.ehlo()
+    mailServer.starttls()
+    mailServer.ehlo()
+    mailServer.login(os.environ["SMTP_USERNAME"], os.environ["SMTP_PASSWORD"])
+    mailServer.sendmail(from_email, to_email, msg.as_string())
+    mailServer.close()
 
 
 if __name__ == "__main__":
-    pd = StripeReporter()
-    pd.load_data(json.loads(sys.argv[1]))
-    pd.run()
-    print(json.dumps(pd.results, indent=2))
-    # if any(pd.results.values()):
-    #     email_results(pd.results)
+    reporter = StripeReporter()
+
+    # name=key name=key etc
+    stripe_input = os.environ["STRIPE_ACCOUNTS"]
+    parts = stripe_input.split()
+    for part in parts:
+        name, key = part.split("=")
+        reporter.account_keys[name] = key
+
+    reporter.run()
+    print(json.dumps(reporter.results, indent=2))
+    if any(reporter.results.values()):
+        email_results(reporter.results)

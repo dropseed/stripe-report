@@ -7,9 +7,8 @@ verify_ssl = true
 ipdb = "*"
 
 [packages]
-requests = "*"
 sentry-sdk = "*"
 stripe = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.9"
