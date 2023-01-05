@@ -47,5 +47,5 @@ jobs:
         SMTP_HOST: smtp.postmarkapp.com
         SMTP_USERNAME: ${{ secrets.POSTMARK_TOKEN }}
         SMTP_PASSWORD: ${{ secrets.POSTMARK_TOKEN }}
-        STRIPE_KEY_mybusiness: ${{ secrets.STRIPE_KEY_PULLAPPROVE3 }}
+        STRIPE_KEY_mybusiness: ${{ secrets.STRIPE_KEY_MYBUSINESS }}
 ```
