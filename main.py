@@ -1,15 +1,8 @@
-import sys
 import json
 import os
 import datetime
 
 import stripe
-import sentry_sdk
-
-
-sentry_sdk.init(
-    dsn=os.environ["SENTRY_DSN"], environment=os.environ.get("SENTRY_ENV", "production")
-)
 
 
 # Max 20

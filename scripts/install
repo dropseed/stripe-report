@@ -1,2 +1,3 @@
 #!/bin/sh -e
-PIPENV_VENV_IN_PROJECT=true pipenv sync --dev
+python3 -m venv .venv
+./.venv/bin/pip install -U pip stripe

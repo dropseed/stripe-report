@@ -15,16 +15,12 @@ jobs:
       with:
         python-version: 3.9
     - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip pipenv
-        ./scripts/install
+      run: ./scripts/install
     - name: Run
       env:
         EMAIL: ${{ secrets.EMAIL }}
-        SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         SMTP_HOST: ${{ secrets.SMTP_HOST }}
         SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
         SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
         STRIPE_ACCOUNTS: ${{ secrets.STRIPE_ACCOUNTS }}
-      run: |
-        ./scripts/run
+      run: ./scripts/run
