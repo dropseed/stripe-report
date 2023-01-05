@@ -1,2 +1,2 @@
 #!/bin/sh -e
-./.venv/bin/python main.py
+poetry run stripe-report

@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "stripe-report"
+version = "0.1.0"
+description = ""
+authors = ["Dave Gaeddert <dave.gaeddert@dropseed.dev>"]
+readme = "README.md"
+packages = [{include = "stripe_report"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+stripe = "^5.0.0"
+
+[tool.poetry.scripts]
+stripe-report = "stripe_report.main:cli"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

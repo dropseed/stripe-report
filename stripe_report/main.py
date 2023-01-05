@@ -83,7 +83,7 @@ class StripeReporter:
         return output
 
     def print_results(self):
-        print(json.dumps(reporter.results, indent=2))
+        print(json.dumps(self.results, indent=2))
 
     def email_results(self):
         html = "<h2>Stripe report for the last 24 hrs</h2>"
@@ -131,7 +131,7 @@ def stripe_keys_from_env():
     return stripe_keys
 
 
-if __name__ == "__main__":
+def cli():
     reporter = StripeReporter(account_keys=stripe_keys_from_env())
     reporter.run()
     reporter.print_results()
