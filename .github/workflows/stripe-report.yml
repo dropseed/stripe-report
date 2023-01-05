@@ -1,4 +1,4 @@
-name: send
+name: stripe-report
 
 on:
   schedule:
@@ -18,9 +18,15 @@ jobs:
       run: ./scripts/install
     - name: Run
       env:
-        EMAIL: ${{ secrets.EMAIL }}
+        TO_EMAIL: reports@dropseed.dev
+        FROM_EMAIL: "Reports <reports@dropseed.dev>"
         SMTP_HOST: ${{ secrets.SMTP_HOST }}
         SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
         SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
-        STRIPE_ACCOUNTS: ${{ secrets.STRIPE_ACCOUNTS }}
+        STRIPE_KEY_pullapprove3: ${{ secrets.STRIPE_KEY_pullapprove3 }}
+        STRIPE_KEY_pullapprove4: ${{ secrets.STRIPE_KEY_pullapprove4 }}
+        STRIPE_KEY_deps2: ${{ secrets.STRIPE_KEY_deps2 }}
+        STRIPE_KEY_deps3: ${{ secrets.STRIPE_KEY_deps3 }}
+        STRIPE_KEY_boardbinder: ${{ secrets.STRIPE_KEY_boardbinder }}
+        STRIPE_KEY_forge: ${{ secrets.STRIPE_KEY_forge }}
       run: ./scripts/run
