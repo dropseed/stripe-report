@@ -104,7 +104,6 @@ def send_email(subject, html, to_email, from_email):
 
     msg = MIMEMultipart()
     msg["From"] = from_email
-    msg["To"] = to_email
     msg["Subject"] = subject
 
     msg.attach(MIMEText(html, "html"))
