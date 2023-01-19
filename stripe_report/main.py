@@ -109,6 +109,9 @@ def send_email(subject, html, to_email, from_email):
 
     msg.attach(MIMEText(html, "html"))
 
+    print("Sending email")
+    print(msg)
+
     mailServer = smtplib.SMTP(os.environ["SMTP_HOST"], os.environ.get("SMTP_PORT", 587))
     mailServer.ehlo()
     mailServer.starttls()
