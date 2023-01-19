@@ -117,7 +117,8 @@ def send_email(subject, html, to_email, from_email):
     mailServer.starttls()
     mailServer.ehlo()
     mailServer.login(os.environ["SMTP_USERNAME"], os.environ["SMTP_PASSWORD"])
-    mailServer.sendmail(from_email, to_email, msg.as_string())
+    to_email_list = [x.strip() for x in to_email.split(",")]
+    mailServer.sendmail(from_email, to_email_list, msg.as_string())
     mailServer.close()
 
 
