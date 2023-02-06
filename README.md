@@ -21,7 +21,7 @@ For example, `STRIPE_KEY_accountone=rk_live_...` and `STRIPE_KEY_accounttwo=rk_l
 
 When creating Stripe API keys,
 you should use [restricted keys](https://stripe.com/docs/keys#create-restricted-api-secret-key),
-and give read permission to Events and Invoices.
+and give read permission to Events, Customers, and Invoices.
 
 ## GitHub Actions
 
