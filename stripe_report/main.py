@@ -24,6 +24,14 @@ EVENT_ICONS = {
 }
 
 
+def link_customer(customer_id):
+    customer = stripe.Customer.retrieve(customer_id)
+    customer_email = customer.get("email", "")
+    customer_name = customer.get("name", "")
+    display = customer_name or customer_email or customer_id
+    return f"<a href='https://dashboard.stripe.com/customers/{customer_id}'>{display}</a>"
+
+
 class StripeReporter:
     def __init__(self, account_keys: dict):
         self.account_keys = account_keys
@@ -58,11 +66,12 @@ class StripeReporter:
             if amount:
                 amount = amount / 100
                 amount = f"${amount:.2f}"
-            customer_email = obj.get("customer_email", "")
+
+            customer_link = link_customer(obj["customer"])
 
             icon = EVENT_ICONS.get(event["type"], "")
 
-            s = f"{icon} <a href='https://dashboard.stripe.com/events/{event['id']}'>{event['type']}</a>: {customer_email} {amount}"
+            s = f"{icon} <a href='https://dashboard.stripe.com/events/{event['id']}'>{event['type']}</a>: {customer_link} {amount}"
             output.append(s)
 
         return output
@@ -77,7 +86,10 @@ class StripeReporter:
         for invoice in invoices:
             amount = invoice["total"] / 100
             amount = f"${amount:.2f}"
-            s = f"🧾 <a href='{invoice['hosted_invoice_url']}'>Open invoice</a>: {invoice['customer_email']} {amount} {invoice['collection_method']}"
+            due = datetime.datetime.fromtimestamp(invoice["due_date"]).date()
+            customer_link = link_customer(invoice["customer"])
+            invoice_url = f"https://dashboard.stripe.com/invoices/{invoice['id']}"
+            s = f"🧾 <a href='{invoice_url}'>Open invoice</a>: {customer_link} {amount} (due {due})"
             output.append(s)
 
         return output
@@ -138,5 +150,5 @@ def cli():
     reporter = StripeReporter(account_keys=stripe_keys_from_env())
     reporter.run()
     reporter.print_results()
-    if reporter.has_results:
+    if reporter.has_results and not os.environ.get("DISABLE_EMAIL"):
         reporter.email_results()
