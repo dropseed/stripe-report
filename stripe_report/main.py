@@ -86,10 +86,14 @@ class StripeReporter:
         for invoice in invoices:
             amount = invoice["total"] / 100
             amount = f"${amount:.2f}"
-            due = datetime.datetime.fromtimestamp(invoice["due_date"]).date()
+            if invoice["due_date"]:
+                due = datetime.datetime.fromtimestamp(invoice["due_date"]).date()
+                due = f"(due {due})"
+            else:
+                due = ""
             customer_link = link_customer(invoice["customer"])
             invoice_url = f"https://dashboard.stripe.com/invoices/{invoice['id']}"
-            s = f"🧾 <a href='{invoice_url}'>Open invoice</a>: {customer_link} {amount} (due {due})"
+            s = f"🧾 <a href='{invoice_url}'>Open invoice</a>: {customer_link} {amount} {due}"
             output.append(s)
 
         return output
