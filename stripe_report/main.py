@@ -83,11 +83,16 @@ class StripeReporter:
 
         output = []
 
+        now = datetime.datetime.now()
+
         for invoice in invoices:
             amount = invoice["total"] / 100
             amount = f"${amount:.2f}"
             if invoice["due_date"]:
                 due = datetime.datetime.fromtimestamp(invoice["due_date"]).date()
+                if due > now.date():
+                    # Not due yet, no need to notify
+                    continue
                 due = f"(due {due})"
             else:
                 due = ""
